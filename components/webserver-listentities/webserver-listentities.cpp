@@ -24,8 +24,15 @@ class ListEntitiesHandler : public AsyncWebHandler {
 
   // The handleRequest method contains the logic for the request.
   void handleRequest(AsyncWebServerRequest* request) override {
-    // Your custom logic to list entities goes here.
-    request->send(200, "text/plain", "List of entities goes here.");
+    ArduinoJson::JsonDocument doc;
+    auto root = doc.to<ArduinoJson::JsonObject>();
+    auto entities = root["entities"].to<ArduinoJson::JsonArray>();
+
+    // Populate entities array as needed...
+
+    std::string json;
+    ArduinoJson::serializeJson(doc, json);
+    request->send(200, "application/json", json.c_str());
   }
 };
 
