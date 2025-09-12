@@ -17,6 +17,7 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
   }
 
   bool can_handle(esphome::web_server_idf::AsyncWebServerRequest *request) {
+    return true;
     const auto url = request->url();
     const bool match = (url == "/entities" || url == "/entities/");
     ESP_LOGD(TAG, "can_handle url=%s match=%d", url.c_str(), match);
