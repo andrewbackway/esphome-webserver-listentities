@@ -50,5 +50,9 @@ void WebServerListEntities::setup() {
   ESP_LOGI(TAG, "Registered /entities endpoint");
 }
 
+void WebServerListEntities::dump_config() {
+  ESP_LOGI(TAG, "Component loaded. Route: /entities");
+}
+
 }  // namespace webserver_listentities
 }  // namespace esphome
