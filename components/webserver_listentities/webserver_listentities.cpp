@@ -2,7 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "esphome/core/component_iterator.h"
-// #include "esphome/components/web_server_base/web_server_base.h"
+#include "esphome/components/web_server_base/web_server_base.h"
 #include "esphome/components/web_server_idf/web_server_idf.h"
 #include <ArduinoJson.h>
 
@@ -178,7 +178,7 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
 
     // Iterate all known components/entities
     ListEntitiesJsonIterator it(arr);
-    ::esphome::iterate_components(&it);
+    ::esphome::iterate(&it);
 
     std::string json;
     ArduinoJson::serializeJson(doc, json);
