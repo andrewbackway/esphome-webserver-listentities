@@ -5,7 +5,7 @@ from esphome.const import CONF_ID
 DEPENDENCIES = ["web_server_base"]
 CODEOWNERS = []
 
-ns = cg.esphome_ns.namespace("custom_web_server")
+ns = cg.esphome_ns.namespace("webserver_listentities")
 WebServerListEntities = ns.class_("WebServerListEntities", cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
