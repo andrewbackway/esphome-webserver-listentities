@@ -23,6 +23,7 @@ class WebServerListEntities : public Component {
 
     // Register /entities route (IDF HTTP handler)
     ws->add_handler("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
+      /*
       ArduinoJson::JsonDocument doc(4096);  // v8 buffer
       auto entities = doc["entities"].as<ArduinoJson::JsonArray>();
 
@@ -41,6 +42,7 @@ class WebServerListEntities : public Component {
       String json;
       serializeJson(doc, json);
       req->send(200, "application/json", json);
+      */
       ESP_LOGD("WebServerListEntities", "Sent /entities response with %d entities", entities.size());
     });
 
