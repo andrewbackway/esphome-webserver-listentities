@@ -11,5 +11,5 @@ class WebServerListEntities : public Component {
   void setup() override;
 };
 
-}  // namespace custom_web_server
+}  // namespace webserver_listentities
 }  // namespace esphome

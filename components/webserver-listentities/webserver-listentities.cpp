@@ -1,31 +1,32 @@
-#include "esphome/core/component.h"
+#include "webserver-listentities.h"
 #include "esphome/core/log.h"
-#include "esphome/core/application.h"
 #include "esphome/components/web_server_base/web_server_base.h"
-#include "esphome/components/web_server_idf/web_server_idf.h"  // IDF web server types
+#include "esphome/components/web_server_idf/web_server_idf.h"
 #include <ArduinoJson.h>
 
 namespace esphome {
 namespace webserver_listentities {
 
-// IDF web server handler (note: snake_case virtuals)
+static const char *const TAG = "webserver_listentities";
+
+// ESP-IDF web server handler (snake_case virtuals)
 class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
-  bool can_handle(esphome::web_server_idf::AsyncWebServerRequest* request)  {
+  bool can_handle(esphome::web_server_idf::AsyncWebServerRequest *request) override {
     const auto url = request->url();
     const bool match = (url == "/entities" || url == "/entities/");
-    ESP_LOGD("ListEntitiesHandler", "can_handle url=%s match=%d", url.c_str(), match);
+    ESP_LOGD(TAG, "can_handle url=%s match=%d", url.c_str(), match);
     return match;
   }
 
-  void handle_request(esphome::web_server_idf::AsyncWebServerRequest* request)  {
-    ESP_LOGD("ListEntitiesHandler", "handle_request /entities");
+  void handle_request(esphome::web_server_idf::AsyncWebServerRequest *request) override {
+    ESP_LOGD(TAG, "handle_request /entities");
 
-    ArduinoJson::JsonDocument doc;
+    ArduinoJson::JsonDocument doc;  // ArduinoJson v8
     auto root = doc.to<ArduinoJson::JsonObject>();
     auto entities = root["entities"].to<ArduinoJson::JsonArray>();
 
-    // Populate entities here if desired; returning an empty array is valid.
+    // Populate entities if desired. Empty array is valid.
 
     std::string json;
     ArduinoJson::serializeJson(doc, json);
@@ -33,21 +34,21 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
   }
 };
 
-class WebServerListEntities : public Component {
- public:
-  float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // after web_server init
+float WebServerListEntities::get_setup_priority() const {
+  // After WiFi; WebServerBase attaches handlers when ready.
+  return setup_priority::AFTER_WIFI;
+}
 
-  void setup() override {
-    ESP_LOGD("WebServerListEntities", "Registering /entities endpoint (ESP-IDF)");
-    auto* ws = esphome::web_server_base::global_web_server_base;
-    if (!ws) {
-      ESP_LOGE("WebServerListEntities", "Web server not available; cannot register /entities");
-      return;
-    }
-    ws->add_handler(new ListEntitiesHandler());
-    ESP_LOGI("WebServerListEntities", "Registered /entities endpoint");
+void WebServerListEntities::setup() {
+  ESP_LOGI(TAG, "Registering /entities endpoint (ESP-IDF)");
+  auto *ws = esphome::web_server_base::global_web_server_base;
+  if (!ws) {
+    ESP_LOGE(TAG, "Web server not available; cannot register /entities");
+    return;
   }
-};
+  ws->add_handler(new ListEntitiesHandler());
+  ESP_LOGI(TAG, "Registered /entities endpoint");
+}
 
-}  // namespace custom_web_server
+}  // namespace webserver_listentities
 }  // namespace esphome
