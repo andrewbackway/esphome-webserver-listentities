@@ -2,6 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "esphome/components/web_server_base/web_server_base.h"
+#include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 
 namespace esphome {
@@ -21,12 +22,34 @@ class WebServerListEntities : public Component {
       return;
     }
 
-    // Register /entities route (IDF HTTP handler)
-    ws->add_handler("/entities", HTTP_GET, HTTP_GET, [](esphome::web_server_base::AsyncWebServerRequest* request) {
-      ESP_LOGD("WebServerListEntities", "Sent /entities response");
-    });
+    if (ws != nullptr) {
+      // Create a new instance of your custom handler and add it.
+      // Use std::unique_ptr to manage the handler's memory.
+      auto handler = std::make_unique<ListEntitiesHandler>();
+      ws->add_handler(handler.release());
+    }
 
     ESP_LOGI("WebServerListEntities", "/entities route registered on shared web server (ESP-IDF)");
+  }
+};
+
+// Your custom handler class
+class ListEntitiesHandler : public AsyncWebHandler {
+ public:
+  // The canHandle method checks if this handler should process the request.
+  // It checks the URL and the HTTP method.
+  bool canHandle(AsyncWebServerRequest* request) override {
+    // Check if the URL is "/list_entities" and the method is GET.
+    if (request->url() == "/entities" && request->method() == HTTP_GET) {
+      return true;
+    }
+    return false;
+  }
+
+  // The handleRequest method contains the logic for the request.
+  void handleRequest(AsyncWebServerRequest* request) override {
+    // Your custom logic to list entities goes here.
+    request->send(200, "text/plain", "List of entities goes here.");
   }
 };
 
