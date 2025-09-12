@@ -1,5 +1,6 @@
 #include "esphome/core/component.h"
 #include "esphome/core/log.h"
+#include "esphome/core/application.h"
 #include "esphome/components/web_server/web_server.h"
 #include <ArduinoJson.h>
 
