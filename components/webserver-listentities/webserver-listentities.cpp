@@ -36,20 +36,6 @@ class WebServerListEntities : public Component {
         ent["object_id"] = entity.object_id();
         ent["name"] = entity.name();
 
-        // Map entity type (IDF protobuf access)
-        switch (entity.which()) {
-          case api::ListEntities::LIST_ENTITIES_SENSOR: ent["type"] = "sensor"; break;
-          case api::ListEntities::LIST_ENTITIES_BINARY_SENSOR: ent["type"] = "binary_sensor"; break;
-          case api::ListEntities::LIST_ENTITIES_SWITCH: ent["type"] = "switch"; break;
-          case api::ListEntities::LIST_ENTITIES_NUMBER: ent["type"] = "number"; break;
-          case api::ListEntities::LIST_ENTITIES_LIGHT: ent["type"] = "light"; break;
-          case api::ListEntities::LIST_ENTITIES_CLIMATE: ent["type"] = "climate"; break;
-          case api::ListEntities::LIST_ENTITIES_TEXT_SENSOR: ent["type"] = "text_sensor"; break;
-          case api::ListEntities::LIST_ENTITIES_FAN: ent["type"] = "fan"; break;
-          case api::ListEntities::LIST_ENTITIES_COVER: ent["type"] = "cover"; break;
-          case api::ListEntities::LIST_ENTITIES_SELECT: ent["type"] = "select"; break;
-          default: ent["type"] = "unknown"; break;
-        }
       }
 
       String json;
