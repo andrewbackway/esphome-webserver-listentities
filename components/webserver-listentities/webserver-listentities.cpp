@@ -11,58 +11,87 @@
 namespace esphome {
 namespace webserver_listentities {
 
+
+
 float WebServerListEntities::get_setup_priority() const {
   return setup_priority::AFTER_WIFI;
 }
 
 void WebServerListEntities::setup() {
-  ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESP-IDF");
+  ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESPHome");
 
-  // Access shared web_server instance
-  auto* ws = App.get_component<web_server::WebServer>();
+  auto *ws = web_server::global_web_server;
   if (!ws) {
-    ESP_LOGE("WebServerListEntities", "Built-in web_server not found; cannot register routes");
+    ESP_LOGE("WebServerListEntities", "Web server not found; cannot register routes");
     return;
   }
 
-  // Register /entities route
-  ws->add_handler("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
-    DynamicJsonDocument doc(4096);  // IDF-optimized buffer
-    JsonArray entities = doc.createNestedArray("entities");
+  ws->add_handler("/entities", HTTP_GET, [this](web_server::Request &req) {
+    ArduinoJson::JsonDocument doc;
+    auto entities = doc["entities"].to<ArduinoJson::JsonArray>();
 
-    api::ListEntitiesIterator it;
-    it.begin();
-    while (it.has_next()) {
-      it.next();
-      const auto& entity = it.current();
-      JsonObject ent = entities.createNestedObject();
-      ent["key"] = entity.key();
-      ent["object_id"] = entity.object_id();
-      ent["name"] = entity.name();
-
-      // Map entity type
-      switch (entity.which()) {
-        case api::ListEntities::LIST_ENTITIES_SENSOR: ent["type"] = "sensor"; break;
-        case api::ListEntities::LIST_ENTITIES_BINARY_SENSOR: ent["type"] = "binary_sensor"; break;
-        case api::ListEntities::LIST_ENTITIES_SWITCH: ent["type"] = "switch"; break;
-        case api::ListEntities::LIST_ENTITIES_NUMBER: ent["type"] = "number"; break;
-        case api::ListEntities::LIST_ENTITIES_LIGHT: ent["type"] = "light"; break;
-        case api::ListEntities::LIST_ENTITIES_CLIMATE: ent["type"] = "climate"; break;
-        case api::ListEntities::LIST_ENTITIES_TEXT_SENSOR: ent["type"] = "text_sensor"; break;
-        case api::ListEntities::LIST_ENTITIES_FAN: ent["type"] = "fan"; break;
-        case api::ListEntities::LIST_ENTITIES_COVER: ent["type"] = "cover"; break;
-        case api::ListEntities::LIST_ENTITIES_SELECT: ent["type"] = "select"; break;
-        default: ent["type"] = "unknown"; break;
+    for (auto *comp : App.get_components()) {
+      ArduinoJson::JsonObject ent;
+      if (auto *sensor = dynamic_cast<esphome::sensor::Sensor *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = sensor->get_object_id();
+        ent["name"] = sensor->get_name();
+        ent["type"] = "sensor";
+      } else if (auto *bs = dynamic_cast<esphome::binary_sensor::BinarySensor *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = bs->get_object_id();
+        ent["name"] = bs->get_name();
+        ent["type"] = "binary_sensor";
+      } else if (auto *sw = dynamic_cast<esphome::switch_::Switch *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = sw->get_object_id();
+        ent["name"] = sw->get_name();
+        ent["type"] = "switch";
+      } else if (auto *num = dynamic_cast<esphome::number::Number *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = num->get_object_id();
+        ent["name"] = num->get_name();
+        ent["type"] = "number";
+      } else if (auto *light = dynamic_cast<esphome::light::LightState *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = light->get_object_id();
+        ent["name"] = light->get_name();
+        ent["type"] = "light";
+      } else if (auto *climate = dynamic_cast<esphome::climate::Climate *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = climate->get_object_id();
+        ent["name"] = climate->get_name();
+        ent["type"] = "climate";
+      } else if (auto *text_sensor = dynamic_cast<esphome::text_sensor::TextSensor *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = text_sensor->get_object_id();
+        ent["name"] = text_sensor->get_name();
+        ent["type"] = "text_sensor";
+      } else if (auto *fan = dynamic_cast<esphome::fan::Fan *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = fan->get_object_id();
+        ent["name"] = fan->get_name();
+        ent["type"] = "fan";
+      } else if (auto *cover = dynamic_cast<esphome::cover::Cover *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = cover->get_object_id();
+        ent["name"] = cover->get_name();
+        ent["type"] = "cover";
+      } else if (auto *select = dynamic_cast<esphome::select::Select *>(comp)) {
+        ent = entities.add<ArduinoJson::JsonObject>();
+        ent["object_id"] = select->get_object_id();
+        ent["name"] = select->get_name();
+        ent["type"] = "select";
       }
     }
 
-    String json;
-    serializeJson(doc, json);
-    req->send(200, "application/json", json);
+    std::string json;
+    ArduinoJson::serializeJson(doc, json);
+    req.send(200, "application/json", json.c_str());
     ESP_LOGD("WebServerListEntities", "Sent /entities response with %d entities", entities.size());
   });
 
-  ESP_LOGI("WebServerListEntities", "/entities route registered on shared web server (ESP-IDF)");
+  ESP_LOGI("WebServerListEntities", "/entities route registered on web server");
 }
 
 }  // namespace webserver_listentities
