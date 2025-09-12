@@ -1,7 +1,7 @@
 #include "esphome/core/component.h"
 #include "esphome/core/log.h"
 #include "esphome/components/web_server/web_server.h"
-#include "esphome/components/api/list_entities.h"
+#include "list_entities.h"
 #include <AsyncWebServer.h>
 #include <ArduinoJson.h>
 
