@@ -1,12 +1,19 @@
-from esphome import config_validation as cv
+import esphome.codegen as cg
+import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
-CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.declare_id("custom_web_server::WebServerListEntities"),
-})
+DEPENDENCIES = ["web_server_base"]
+CODEOWNERS = []
 
-# Dependencies to include API and web_server headers
-DEPENDENCIES = ["api", "web_server"]
+ns = cg.esphome_ns.namespace("custom_web_server")
+WebServerListEntities = ns.class_("WebServerListEntities", cg.Component)
 
-# ESPAsyncWebServer lib dep (from previous fix)
-LIB_DEPS = ["esphome/ESPAsyncWebServer@2.7.0"]
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(): cv.declare_id(WebServerListEntities),
+    }
+).extend(cv.COMPONENT_SCHEMA)
+
+async def to_code(config):
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
