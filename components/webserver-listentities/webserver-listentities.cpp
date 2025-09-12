@@ -8,6 +8,27 @@
 namespace esphome {
 namespace custom_web_server {
 
+  
+// Your custom handler class
+class ListEntitiesHandler : public AsyncWebHandler {
+ public:
+  // The canHandle method checks if this handler should process the request.
+  // It checks the URL and the HTTP method.
+  bool canHandle(AsyncWebServerRequest* request) {
+    // Check if the URL is "/list_entities" and the method is GET.
+    if (request->url() == "/entities" && request->method() == HTTP_GET) {
+      return true;
+    }
+    return false;
+  }
+
+  // The handleRequest method contains the logic for the request.
+  void handleRequest(AsyncWebServerRequest* request) override {
+    // Your custom logic to list entities goes here.
+    request->send(200, "text/plain", "List of entities goes here.");
+  }
+};
+
 class WebServerListEntities : public Component {
  public:
   float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // After web_server in IDF
@@ -32,25 +53,6 @@ class WebServerListEntities : public Component {
   }
 };
 
-// Your custom handler class
-class ListEntitiesHandler : public AsyncWebHandler {
- public:
-  // The canHandle method checks if this handler should process the request.
-  // It checks the URL and the HTTP method.
-  bool canHandle(AsyncWebServerRequest* request) {
-    // Check if the URL is "/list_entities" and the method is GET.
-    if (request->url() == "/entities" && request->method() == HTTP_GET) {
-      return true;
-    }
-    return false;
-  }
-
-  // The handleRequest method contains the logic for the request.
-  void handleRequest(AsyncWebServerRequest* request) override {
-    // Your custom logic to list entities goes here.
-    request->send(200, "text/plain", "List of entities goes here.");
-  }
-};
 
 }  // namespace custom_web_server
 }  // namespace esphome
