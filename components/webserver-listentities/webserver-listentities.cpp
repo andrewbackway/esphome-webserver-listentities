@@ -1,22 +1,21 @@
 #include "webserver-listentities.h"
 #include "esphome/core/component.h"
 #include "esphome/core/log.h"
+#include "esphome/core/application.h"  
 #include "esphome/components/web_server/web_server.h"
 #include "esphome/components/api/list_entities.h"
-#include "AsyncWebServer.h"  // Correct include (bundled in ESPHome)
+#include "AsyncWebServer.h"
 #include <ArduinoJson.h>
 
-namespace esphome {
-namespace webserver_listentities {
 
 class WebServerListEntities : public Component {
  public:
-  float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // After web_server in IDF
+  float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // After web_server
 
   void setup() override {
     ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESP-IDF");
 
-    // Access shared web_server instance (works in IDF)
+    // Access shared web_server instance
     auto* ws = App.get_component<web_server::WebServer>();
     if (!ws) {
       ESP_LOGE("WebServerListEntities", "Built-in web_server not found; cannot register routes");
@@ -29,7 +28,7 @@ class WebServerListEntities : public Component {
       return;
     }
 
-    // Register /entities route (IDF HTTP handler)
+    // Register /entities route
     server->on("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
       DynamicJsonDocument doc(4096);  // IDF-optimized buffer
       JsonArray entities = doc.createNestedArray("entities");
@@ -44,7 +43,7 @@ class WebServerListEntities : public Component {
         ent["object_id"] = entity.object_id();
         ent["name"] = entity.name();
 
-        // Map entity type (IDF protobuf access)
+        // Map entity type
         switch (entity.which()) {
           case api::ListEntities::LIST_ENTITIES_SENSOR: ent["type"] = "sensor"; break;
           case api::ListEntities::LIST_ENTITIES_BINARY_SENSOR: ent["type"] = "binary_sensor"; break;

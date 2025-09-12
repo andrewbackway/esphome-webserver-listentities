@@ -5,6 +5,8 @@ CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id("custom_web_server::WebServerListEntities"),
 })
 
-# Ensure ESPAsyncWebServer is included in the build
-DEPENDENCIES = ["web_server"]
-LIB_DEPS = ["esphome/ESPAsyncWebServer@2.7.0"]  # Matches ESPHome's bundled version
+# Dependencies to include API and web_server headers
+DEPENDENCIES = ["api", "web_server"]
+
+# ESPAsyncWebServer lib dep (from previous fix)
+LIB_DEPS = ["esphome/ESPAsyncWebServer@2.7.0"]
