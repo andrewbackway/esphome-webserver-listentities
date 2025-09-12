@@ -15,14 +15,14 @@ class WebServerListEntities : public Component {
     ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESP-IDF");
 
     // Access shared web_server instance (works in IDF)
-    auto* ws = App.get_component<web_server::WebServer>();
+    auto* ws = esphome::web_server::global_web_server
     if (!ws) {
       ESP_LOGE("WebServerListEntities", "Built-in web_server not found; cannot register routes");
       return;
     }
 
     // Register /entities route (IDF HTTP handler)
-    ws->get_server()->on("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
+    ws->add_handler("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
       ArduinoJson::JsonDocument doc(4096);  // v8 buffer
       auto entities = doc["entities"].as<ArduinoJson::JsonArray>();
 
