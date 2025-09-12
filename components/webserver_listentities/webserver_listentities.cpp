@@ -2,7 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "esphome/core/component_iterator.h"
-#include "esphome/components/web_server_base/web_server_base.h"
+// #include "esphome/components/web_server_base/web_server_base.h"
 #include "esphome/components/web_server_idf/web_server_idf.h"
 #include <ArduinoJson.h>
 
