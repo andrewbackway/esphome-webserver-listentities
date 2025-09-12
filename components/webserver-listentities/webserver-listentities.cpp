@@ -23,26 +23,6 @@ class WebServerListEntities : public Component {
 
     // Register /entities route (IDF HTTP handler)
     ws->add_handler("/entities", HTTP_GET, HTTP_GET, [](esphome::web_server_base::AsyncWebServerRequest* request) {
-      /*
-      ArduinoJson::JsonDocument doc(4096);  // v8 buffer
-      auto entities = doc["entities"].as<ArduinoJson::JsonArray>();
-
-      api::ListEntitiesIterator it;
-      it.begin();
-      while (it.has_next()) {
-        it.next();
-        const auto& entity = it.current();
-        auto ent = entities.add<ArduinoJson::JsonObject>();
-        ent["key"] = entity.key();
-        ent["object_id"] = entity.object_id();
-        ent["name"] = entity.name();
-
-      }
-
-      String json;
-      serializeJson(doc, json);
-      req->send(200, "application/json", json);
-      */
       ESP_LOGD("WebServerListEntities", "Sent /entities response");
     });
 
