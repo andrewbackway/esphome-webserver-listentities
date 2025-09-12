@@ -22,7 +22,7 @@ class WebServerListEntities : public Component {
     }
 
     // Register /entities route (IDF HTTP handler)
-    ws->add_handler("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
+    ws->add_handler("/entities", HTTP_GET, HTTP_GET, [](esphome::web_server_base::AsyncWebServerRequest* request) {
       /*
       ArduinoJson::JsonDocument doc(4096);  // v8 buffer
       auto entities = doc["entities"].as<ArduinoJson::JsonArray>();
