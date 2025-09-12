@@ -1,7 +1,7 @@
 #include "esphome/core/component.h"
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
-#include "esphome/components/web_server/web_server.h"
+#include "esphome/components/web_server_base/web_server_base.h"
 #include <ArduinoJson.h>
 
 namespace esphome {
@@ -15,7 +15,7 @@ class WebServerListEntities : public Component {
     ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESP-IDF");
 
     // Access shared web_server instance (works in IDF)
-    auto* ws = esphome::App.get_component<esphome::web_server::WebServer>();
+    auto* ws = esphome::web_server_base::get_web_server_base();
     if (!ws) {
       ESP_LOGE("WebServerListEntities", "Built-in web_server not found; cannot register routes");
       return;
