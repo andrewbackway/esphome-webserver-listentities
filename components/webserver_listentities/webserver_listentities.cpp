@@ -1,4 +1,4 @@
-#include "webserver-listentities.h"
+#include "webserver_listentities.h"
 #include "esphome/core/log.h"
 #include "esphome/components/web_server_base/web_server_base.h"
 #include "esphome/components/web_server_idf/web_server_idf.h"
