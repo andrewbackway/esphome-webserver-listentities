@@ -2,33 +2,31 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "esphome/components/web_server_base/web_server_base.h"
+#include "esphome/components/web_server_idf/web_server_idf.h"  // IDF web server types
 #include <ArduinoJson.h>
-#include <memory>
 
 namespace esphome {
 namespace custom_web_server {
 
-  
-// Your custom handler class
-class ListEntitiesHandler : public AsyncWebHandler {
+// Custom handler class for ESP-IDF web server
+class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
-  // The canHandle method checks if this handler should process the request.
-  // It checks the URL and the HTTP method.
-  bool canHandle(AsyncWebServerRequest* request) {
-    // Check if the URL is "/list_entities" and the method is GET.
-    if (request->url() == "/entities" && request->method() == HTTP_GET) {
-      return true;
-    }
-    return false;
+  bool canHandle(esphome::web_server_idf::AsyncWebServerRequest* request) override {
+    const auto url = request->url();
+    const auto method = request->method();
+    const bool match = (url == "/entities" || url == "/entities/") &&
+                       (method == esphome::web_server_idf::HTTP_GET);
+    ESP_LOGD("ListEntitiesHandler", "canHandle url=%s method=%d match=%d", url.c_str(), (int) method, match);
+    return match;
   }
 
-  // The handleRequest method contains the logic for the request.
-  void handleRequest(AsyncWebServerRequest* request) override {
+  void handleRequest(esphome::web_server_idf::AsyncWebServerRequest* request) override {
+    ESP_LOGD("ListEntitiesHandler", "handleRequest /entities");
     ArduinoJson::JsonDocument doc;
     auto root = doc.to<ArduinoJson::JsonObject>();
     auto entities = root["entities"].to<ArduinoJson::JsonArray>();
 
-    // Populate entities array as needed...
+    // TODO: populate entities; sending an empty array is fine for now
 
     std::string json;
     ArduinoJson::serializeJson(doc, json);
@@ -38,29 +36,19 @@ class ListEntitiesHandler : public AsyncWebHandler {
 
 class WebServerListEntities : public Component {
  public:
-  float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // After web_server in IDF
+  float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // after web_server init
 
   void setup() override {
-    ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESP-IDF");
-
-    // Access shared web_server instance (works in IDF)
+    ESP_LOGD("WebServerListEntities", "Registering /entities endpoint (ESP-IDF)");
     auto* ws = esphome::web_server_base::global_web_server_base;
     if (!ws) {
-      ESP_LOGE("WebServerListEntities", "Built-in web_server not found; cannot register routes");
+      ESP_LOGE("WebServerListEntities", "Web server not available; cannot register /entities");
       return;
     }
-
-    if (ws != nullptr) {
-      // Create a new instance of your custom handler and add it.
-      // Use std::unique_ptr to manage the handler's memory.
-      //ws->add_handler(std::unique_ptr<ListEntitiesHandler>(new ListEntitiesHandler()));
-        ws->add_handler(new ListEntitiesHandler());
-    }
-
-    ESP_LOGI("WebServerListEntities", "/entities route registered on shared web server (ESP-IDF)");
+    ws->add_handler(new ListEntitiesHandler());
+    ESP_LOGI("WebServerListEntities", "Registered /entities endpoint");
   }
 };
-
 
 }  // namespace custom_web_server
 }  // namespace esphome
