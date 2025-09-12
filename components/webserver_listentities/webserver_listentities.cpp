@@ -163,14 +163,13 @@ class ListEntitiesJsonIterator : public esphome::ComponentIterator {
 class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
   bool canHandle(esphome::web_server_idf::AsyncWebServerRequest *request) const override {
-    return true;
     const auto url = request->url();
     const bool match = (url == "/entities" || url == "/entities/");
     ESP_LOGD(TAG, "can_handle url=%s match=%d", url.c_str(), match);
     return match;
   }
 
-  void handleRequest(esphome::web_server_idf::AsyncWebServerRequest *request) override{
+  void handleRequest(esphome::web_server_idf::AsyncWebServerRequest *request) override {
     ESP_LOGD(TAG, "handle_request /entities");
 
     ArduinoJson::JsonDocument doc;  // ArduinoJson v8
@@ -179,7 +178,7 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
 
     // Iterate all known components/entities
     ListEntitiesJsonIterator it(arr);
-    App.iterate(&it);
+    esphome::iterate_components(&it);
 
     std::string json;
     ArduinoJson::serializeJson(doc, json);
