@@ -2,8 +2,8 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "esphome/components/web_server_base/web_server_base.h"
-#include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
+#include <memory>
 
 namespace esphome {
 namespace custom_web_server {
