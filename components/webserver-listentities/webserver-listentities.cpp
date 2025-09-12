@@ -1,10 +1,10 @@
 #include "webserver-listentities.h"
-#include "esphome/core/component.h"
 #include "esphome/core/log.h"
+#include "esphome/core/component.h"
 #include "esphome/core/application.h"  
 #include "esphome/components/web_server/web_server.h"
 #include "esphome/components/api/list_entities.h"
-#include "AsyncWebServer.h"
+//#include "AsyncWebServer.h"
 #include <ArduinoJson.h>
 
 
@@ -22,14 +22,15 @@ class WebServerListEntities : public Component {
       return;
     }
 
+    /*
     AsyncWebServer* server = ws->get_server();  // Shared IDF-compatible instance
     if (!server) {
       ESP_LOGE("WebServerListEntities", "Web server instance not available in IDF mode");
       return;
     }
-
+    */
     // Register /entities route
-    server->on("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
+    ws->add_handler("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
       DynamicJsonDocument doc(4096);  // IDF-optimized buffer
       JsonArray entities = doc.createNestedArray("entities");
 
