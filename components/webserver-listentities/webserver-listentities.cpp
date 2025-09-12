@@ -25,8 +25,7 @@ class WebServerListEntities : public Component {
     if (ws != nullptr) {
       // Create a new instance of your custom handler and add it.
       // Use std::unique_ptr to manage the handler's memory.
-      auto handler = std::make_unique<ListEntitiesHandler>();
-      ws->add_handler(handler.release());
+      ws->add_handler(std::unique_ptr<ListEntitiesHandler>(new ListEntitiesHandler()));
     }
 
     ESP_LOGI("WebServerListEntities", "/entities route registered on shared web server (ESP-IDF)");
