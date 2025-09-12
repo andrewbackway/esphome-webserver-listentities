@@ -12,6 +12,10 @@ static const char *const TAG = "webserver_listentities";
 // ESP-IDF web server handler (snake_case virtuals)
 class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
+   bool is_request_handler() {  // crucial for IDF handler selection
+    return true;
+  }
+
   bool can_handle(esphome::web_server_idf::AsyncWebServerRequest *request) {
     const auto url = request->url();
     const bool match = (url == "/entities" || url == "/entities/");
