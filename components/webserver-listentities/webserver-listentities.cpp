@@ -6,7 +6,7 @@
 #include <ArduinoJson.h>
 
 namespace esphome {
-namespace custom_web_server {
+namespace webserver_listentities {
 
 // IDF web server handler (note: snake_case virtuals)
 class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
