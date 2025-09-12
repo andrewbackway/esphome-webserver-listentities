@@ -12,11 +12,7 @@ static const char *const TAG = "webserver_listentities";
 // ESP-IDF web server handler (snake_case virtuals)
 class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
-   bool is_request_handler() {  // crucial for IDF handler selection
-    return true;
-  }
-
-  bool can_handle(esphome::web_server_idf::AsyncWebServerRequest *request) {
+  bool canHandle(esphome::web_server_idf::AsyncWebServerRequest *request) override {
     return true;
     const auto url = request->url();
     const bool match = (url == "/entities" || url == "/entities/");
@@ -24,7 +20,7 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
     return match;
   }
 
-  void handle_request(esphome::web_server_idf::AsyncWebServerRequest *request) {
+  void canHandle(esphome::web_server_idf::AsyncWebServerRequest *request) override{
     ESP_LOGD(TAG, "handle_request /entities");
 
     ArduinoJson::JsonDocument doc;  // ArduinoJson v8
