@@ -8,6 +8,9 @@
 #include <ArduinoJson.h>
 
 
+namespace esphome {
+namespace webserver_listentities {
+    
 class WebServerListEntities : public Component {
  public:
   float get_setup_priority() const override { return setup_priority::AFTER_WIFI; }  // After web_server
