@@ -2,7 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
-DEPENDENCIES = ["web_server_base"]
+DEPENDENCIES = ["web_server"]
 CODEOWNERS = []
 
 ns = cg.esphome_ns.namespace("webserver_listentities")
