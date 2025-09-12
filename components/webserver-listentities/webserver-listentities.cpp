@@ -43,7 +43,7 @@ class WebServerListEntities : public Component {
       serializeJson(doc, json);
       req->send(200, "application/json", json);
       */
-      ESP_LOGD("WebServerListEntities", "Sent /entities response with %d entities", entities.size());
+      ESP_LOGD("WebServerListEntities", "Sent /entities response");
     });
 
     ESP_LOGI("WebServerListEntities", "/entities route registered on shared web server (ESP-IDF)");
