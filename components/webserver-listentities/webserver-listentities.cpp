@@ -22,15 +22,15 @@ class WebServerListEntities : public Component {
 
     // Register /entities route (IDF HTTP handler)
     ws->get_server()->on("/entities", HTTP_GET, [this](AsyncWebServerRequest* req) {
-      DynamicJsonDocument doc(4096);  // IDF-optimized buffer
-      JsonArray entities = doc.createNestedArray("entities");
+      ArduinoJson::JsonDocument doc(4096);  // v8 buffer
+      auto entities = doc["entities"].as<ArduinoJson::JsonArray>();
 
       api::ListEntitiesIterator it;
       it.begin();
       while (it.has_next()) {
         it.next();
         const auto& entity = it.current();
-        JsonObject ent = entities.createNestedObject();
+        auto ent = entities.add<ArduinoJson::JsonObject>();
         ent["key"] = entity.key();
         ent["object_id"] = entity.object_id();
         ent["name"] = entity.name();
