@@ -1,12 +1,13 @@
+#include "webserver-listentities.h"
 #include "esphome/core/component.h"
 #include "esphome/core/log.h"
 #include "esphome/components/web_server/web_server.h"
-#include "webserver-listentities.h"
-#include <AsyncWebServer.h>
+#include "esphome/components/api/list_entities.h"
+#include "AsyncWebServer.h"  // Correct include (bundled in ESPHome)
 #include <ArduinoJson.h>
 
 namespace esphome {
-namespace custom_web_server {
+namespace webserver_listentities {
 
 class WebServerListEntities : public Component {
  public:

@@ -3,7 +3,7 @@
 #include "esphome/core/component.h"
 
 namespace esphome {
-namespace custom_web_server {
+namespace webserver_listentities {
 
 class WebServerListEntities : public Component {
  public:
