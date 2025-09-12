@@ -15,7 +15,7 @@ class WebServerListEntities : public Component {
     ESP_LOGD("WebServerListEntities", "Setting up /entities endpoint for ESP-IDF");
 
     // Access shared web_server instance (works in IDF)
-    auto* ws = esphome::web_server::global_web_server
+    auto* ws = esphome::App.get_component<esphome::web_server::WebServer>();
     if (!ws) {
       ESP_LOGE("WebServerListEntities", "Built-in web_server not found; cannot register routes");
       return;
