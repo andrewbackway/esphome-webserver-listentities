@@ -37,7 +37,7 @@ class ListEntitiesHandler : public AsyncWebHandler {
  public:
   // The canHandle method checks if this handler should process the request.
   // It checks the URL and the HTTP method.
-  bool canHandle(AsyncWebServerRequest* request) override {
+  bool canHandle(AsyncWebServerRequest* request) {
     // Check if the URL is "/list_entities" and the method is GET.
     if (request->url() == "/entities" && request->method() == HTTP_GET) {
       return true;
