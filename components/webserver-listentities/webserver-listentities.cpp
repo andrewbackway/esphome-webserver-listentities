@@ -11,14 +11,14 @@ namespace custom_web_server {
 // IDF web server handler (note: snake_case virtuals)
 class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
-  bool can_handle(esphome::web_server_idf::AsyncWebServerRequest* request) override {
+  bool can_handle(esphome::web_server_idf::AsyncWebServerRequest* request)  {
     const auto url = request->url();
     const bool match = (url == "/entities" || url == "/entities/");
     ESP_LOGD("ListEntitiesHandler", "can_handle url=%s match=%d", url.c_str(), match);
     return match;
   }
 
-  void handle_request(esphome::web_server_idf::AsyncWebServerRequest* request) override {
+  void handle_request(esphome::web_server_idf::AsyncWebServerRequest* request)  {
     ESP_LOGD("ListEntitiesHandler", "handle_request /entities");
 
     ArduinoJson::JsonDocument doc;
