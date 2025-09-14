@@ -42,15 +42,15 @@ Add this component to your ESPHome configuration as an external component:
 external_components:
   - source:
       type: git
-      url: https://github.com/andrewbackway/esphome-webserver-listentities
-      components: ["webserver-listcomponents"]
+      url: https://github.com/andrewbackway/esphome-webserver-listcomponents
+      components: ["webserver_listcomponents"]
 
 # Enable the built-in web server (required)
 web_server:
   port: 80
 
 # Enable the list entities component
-webserver-listcomponents:
+webserver_listcomponents:
 ```
 
 ## Prerequisites
@@ -172,10 +172,10 @@ web_server:
 external_components:
   - source:
       type: git
-      url: https://github.com/andrewbackway/esphome-webserver-listentities
-      components: ["webserver-listcomponents"]
+      url: https://github.com/andrewbackway/esphome-webserver-listcomponents
+      components: ["webserver_listcomponents"]
 
-webserver-listentities:
+webserver_listcomponents:
 
 # Example entities that will appear in /entities
 sensor:
