@@ -176,7 +176,7 @@ class ListComponentsHandler : public esphome::web_server_idf::AsyncWebHandler {
 
     ArduinoJson::JsonDocument doc;  // ArduinoJson v8
     auto root = doc.to<ArduinoJson::JsonObject>();
-    auto arr = root["entities"].to<ArduinoJson::JsonArray>();
+    auto arr = root["components"].to<ArduinoJson::JsonArray>();
 
     // Iterate all known components/entities
     ListComponentsJsonIterator it(arr);
