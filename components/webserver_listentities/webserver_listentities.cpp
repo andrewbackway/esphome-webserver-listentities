@@ -178,7 +178,8 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
 
     // Iterate all known components/entities
     ListEntitiesJsonIterator it(arr);
-    ::esphome::iterate(&it);
+    it.begin();
+    //::esphome::iterate(&it);
 
     std::string json;
     ArduinoJson::serializeJson(doc, json);
