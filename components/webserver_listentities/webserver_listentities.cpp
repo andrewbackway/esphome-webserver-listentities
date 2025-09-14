@@ -79,7 +79,8 @@ static const char *const TAG = "webserver_listentities";
 // JSON-building iterator over all components
 class ListEntitiesJsonIterator : public esphome::ComponentIterator {
  public:
-  ComponentIterator::IteratorState get_state() const { return this->state_; }
+  using State = ComponentIterator::IteratorState;
+  State get_state() const { return this->state_; }
   explicit ListEntitiesJsonIterator(ArduinoJson::JsonArray &out) : out_(out) {}
 
 #ifdef USE_SENSOR
@@ -180,7 +181,7 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
     // Iterate all known components/entities
     ListEntitiesJsonIterator it(arr);
     it.begin();
-    while (it.get_state() != ComponentIterator::IteratorState::NONE) {
+    while (it.get_state() != ListEntitiesJsonIterator::State::NONE) {
       it.advance();
     }
 
