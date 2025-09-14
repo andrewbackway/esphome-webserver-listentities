@@ -162,7 +162,7 @@ class ListComponentsJsonIterator : public esphome::ComponentIterator {
 };
 
 // ESP-IDF web server handler (snake_case virtuals; note const on is_request_handler)
-class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
+class ListComponentsHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
   bool canHandle(esphome::web_server_idf::AsyncWebServerRequest *request) const override {
     const auto url = request->url();
@@ -203,7 +203,7 @@ void WebServerListComponents::setup() {
     ESP_LOGE(TAG, "Web server not available; cannot register /entities");
     return;
   }
-  ws->add_handler(new ListEntitiesHandler());
+  ws->add_handler(new ListComponentsHandler());
   ESP_LOGI(TAG, "Registered /entities endpoint");
 }
 

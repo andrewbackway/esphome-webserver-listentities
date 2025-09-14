@@ -245,7 +245,7 @@ Enable debug logging to see detailed component operation:
 logger:
   level: DEBUG
   logs:
-    WebServerListEntities: DEBUG
+    :WebServerListComponents DEBUG
 ```
 
 ## Contributing
