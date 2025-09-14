@@ -166,19 +166,19 @@ class ListComponentsHandler : public esphome::web_server_idf::AsyncWebHandler {
  public:
   bool canHandle(esphome::web_server_idf::AsyncWebServerRequest *request) const override {
     const auto url = request->url();
-    const bool match = (url == "/entities" || url == "/entities/");
+    const bool match = (url == "/components" || url == "/components/");
     ESP_LOGD(TAG, "can_handle url=%s match=%d", url.c_str(), match);
     return match;
   }
 
   void handleRequest(esphome::web_server_idf::AsyncWebServerRequest *request) override {
-    ESP_LOGD(TAG, "handle_request /entities");
+    ESP_LOGD(TAG, "handle_request /components");
 
     ArduinoJson::JsonDocument doc;  // ArduinoJson v8
     auto root = doc.to<ArduinoJson::JsonObject>();
     auto arr = root["components"].to<ArduinoJson::JsonArray>();
 
-    // Iterate all known components/entities
+    // Iterate all known components
     ListComponentsJsonIterator it(arr);
     it.begin();
     while (it.get_state() != ListComponentsJsonIterator::State::NONE) {
@@ -197,17 +197,17 @@ float WebServerListComponents::get_setup_priority() const {
 }
 
 void WebServerListComponents::setup() {
-  ESP_LOGI(TAG, "Registering /entities endpoint (ESP-IDF)");
+  ESP_LOGI(TAG, "Registering /components endpoint (ESP-IDF)");
   auto *ws = esphome::web_server_base::global_web_server_base;
   if (!ws) {
-    ESP_LOGE(TAG, "Web server not available; cannot register /entities");
+    ESP_LOGE(TAG, "Web server not available; cannot register /components");
     return;
   }
   ws->add_handler(new ListComponentsHandler());
-  ESP_LOGI(TAG, "Registered /entities endpoint");
+  ESP_LOGI(TAG, "Registered /components endpoint");
 }
 
-void WebServerListComponents::dump_config() { ESP_LOGI(TAG, "Component loaded. Route: /entities"); }
+void WebServerListComponents::dump_config() { ESP_LOGI(TAG, "Component loaded. Route: /components"); }
 
 }  // namespace webserver_listcomponents
 }  // namespace esphome
