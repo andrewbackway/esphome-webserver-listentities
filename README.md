@@ -1,10 +1,10 @@
 # ESPHome WebServer List Entities
 
-An ESPHome external component that adds a `/entities` HTTP endpoint to your device's web server, providing a JSON API to list all entities and their metadata.
+An ESPHome external component that adds the missing `/components` HTTP endpoint to your device's web server, providing a JSON API to list all entities and their metadata.
 
 ## Overview
 
-This component extends the built-in ESPHome web server by adding a new endpoint at `/entities` that returns a JSON response containing information about all entities configured on your device. This is particularly useful for:
+This component extends the built-in ESPHome web server by adding a new endpoint at `/components` that returns a JSON response containing information about all entities configured on your device. This is particularly useful for:
 
 - Building custom dashboards or integrations
 - Debugging entity configurations
@@ -13,7 +13,7 @@ This component extends the built-in ESPHome web server by adding a new endpoint 
 
 ## Features
 
-- 🌐 Adds `/entities` GET endpoint to existing ESPHome web server
+- 🌐 Adds `/components` GET endpoint to existing ESPHome web server
 - 📊 Returns comprehensive entity metadata (key, object_id, name, type)
 - 🔧 Supports all major ESPHome entity types
 - ⚡ ESP-IDF compatible
@@ -43,14 +43,14 @@ external_components:
   - source:
       type: git
       url: https://github.com/andrewbackway/esphome-webserver-listentities
-    components: ["webserver-listentities"]
+      components: ["webserver-listcomponents"]
 
 # Enable the built-in web server (required)
 web_server:
   port: 80
 
 # Enable the list entities component
-webserver-listentities:
+webserver-listcomponents:
 ```
 
 ## Prerequisites
@@ -116,7 +116,7 @@ import requests
 import json
 
 # Get entities from your ESPHome device
-response = requests.get('http://192.168.1.100/entities')
+response = requests.get('http://192.168.1.100/components')
 data = response.json()
 
 for entity in data['entities']:
@@ -125,7 +125,7 @@ for entity in data['entities']:
 
 ### JavaScript/Fetch
 ```javascript
-fetch('http://192.168.1.100/entities')
+fetch('http://192.168.1.100/components')
   .then(response => response.json())
   .then(data => {
     data.entities.forEach(entity => {
@@ -136,7 +136,7 @@ fetch('http://192.168.1.100/entities')
 
 ### cURL
 ```bash
-curl http://192.168.1.100/entities | jq '.entities[] | {name, type}'
+curl http://192.168.1.100/components | jq '.entities[] | {name, type}'
 ```
 
 ## Complete Configuration Example
@@ -173,7 +173,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/andrewbackway/esphome-webserver-listentities
-    components: ["webserver-listentities"]
+      components: ["webserver-listcomponents"]
 
 webserver-listentities:
 
@@ -210,13 +210,12 @@ binary_sensor:
 
 This component relies on:
 - `esphome/components/web_server` - For the HTTP server infrastructure
-- `esphome/components/api/list_entities` - For entity enumeration
 - `AsyncWebServer` - For HTTP request handling
 - `ArduinoJson` - For JSON serialization
 
 ### Logging
 
-The component logs to the `WebServerListEntities` tag with different levels:
+The component logs to the `WebServerListComponents` tag with different levels:
 - `ESP_LOGD` - Debug information about setup and responses
 - `ESP_LOGI` - Information about successful route registration  
 - `ESP_LOGE` - Errors during setup or operation
@@ -230,7 +229,7 @@ The component logs to the `WebServerListEntities` tag with different levels:
 - Verify the web server component is loading successfully
 
 **404 on /entities endpoint**
-- Check that `webserver-listentities:` is included in your configuration
+- Check that `webserver-listcomponents:` is included in your configuration
 - Verify the external component was loaded successfully
 - Check device logs for setup errors
 

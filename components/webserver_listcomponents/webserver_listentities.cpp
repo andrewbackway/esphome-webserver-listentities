@@ -1,4 +1,4 @@
-#include "webserver_listentities.h"
+#include "webserver_listcomponents.h"
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "esphome/core/component_iterator.h"
@@ -72,16 +72,16 @@
 #endif
 
 namespace esphome {
-namespace webserver_listentities {
+namespace webserver_listcomponents {
 
-static const char *const TAG = "webserver_listentities";
+static const char *const TAG = "webserver_listcomponents";
 
 // JSON-building iterator over all components
-class ListEntitiesJsonIterator : public esphome::ComponentIterator {
+class ListComponentsJsonIterator : public esphome::ComponentIterator {
  public:
   using State = ComponentIterator::IteratorState;
   State get_state() const { return this->state_; }
-  explicit ListEntitiesJsonIterator(ArduinoJson::JsonArray &out) : out_(out) {}
+  explicit ListComponentsJsonIterator(ArduinoJson::JsonArray &out) : out_(out) {}
 
 #ifdef USE_SENSOR
   bool on_sensor(sensor::Sensor *e) override { add_(e, "sensor"); return true; }
@@ -179,9 +179,9 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
     auto arr = root["entities"].to<ArduinoJson::JsonArray>();
 
     // Iterate all known components/entities
-    ListEntitiesJsonIterator it(arr);
+    ListComponentsJsonIterator it(arr);
     it.begin();
-    while (it.get_state() != ListEntitiesJsonIterator::State::NONE) {
+    while (it.get_state() != ListComponentsJsonIterator::State::NONE) {
       it.advance();
     }
 
@@ -191,12 +191,12 @@ class ListEntitiesHandler : public esphome::web_server_idf::AsyncWebHandler {
   }
 };
 
-float WebServerListEntities::get_setup_priority() const {
+float WebServerListComponents::get_setup_priority() const {
   // After WiFi; server attaches handlers when ready.
   return setup_priority::AFTER_WIFI;
 }
 
-void WebServerListEntities::setup() {
+void WebServerListComponents::setup() {
   ESP_LOGI(TAG, "Registering /entities endpoint (ESP-IDF)");
   auto *ws = esphome::web_server_base::global_web_server_base;
   if (!ws) {
@@ -207,7 +207,7 @@ void WebServerListEntities::setup() {
   ESP_LOGI(TAG, "Registered /entities endpoint");
 }
 
-void WebServerListEntities::dump_config() { ESP_LOGI(TAG, "Component loaded. Route: /entities"); }
+void WebServerListComponents::dump_config() { ESP_LOGI(TAG, "Component loaded. Route: /entities"); }
 
-}  // namespace webserver_listentities
+}  // namespace webserver_listcomponents
 }  // namespace esphome
