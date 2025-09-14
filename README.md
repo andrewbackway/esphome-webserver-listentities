@@ -1,4 +1,4 @@
-# ESPHome WebServer List Entities
+# ESPHome Web Server API List Components
 
 An ESPHome external component that adds the missing `/components` HTTP endpoint to your device's web server, providing a JSON API to list all entities and their metadata.
 
