@@ -1,14 +1,14 @@
 # ESPHome Web Server API List Components
 
-An ESPHome external component that adds the missing `/components` HTTP endpoint to your device's web server, providing a JSON API to list all entities and their metadata.
+An ESPHome external component that adds the missing `/components` HTTP endpoint to your device's web server, providing a JSON API to list all components and their metadata.
 
 ## Overview
 
-This component extends the built-in ESPHome web server by adding a new endpoint at `/components` that returns a JSON response containing information about all entities configured on your device. This is particularly useful for:
+This component extends the built-in ESPHome web server by adding a new endpoint at `/components` that returns a JSON response containing information about all components configured on your device. This is particularly useful for:
 
 - Building custom dashboards or integrations
 - Debugging entity configurations
-- Discovering available entities programmatically
+- Discovering available components programmatically
 - Creating dynamic UI applications that need to know about device capabilities
 
 ## Features
@@ -49,7 +49,7 @@ external_components:
 web_server:
   port: 80
 
-# Enable the list entities component
+# Enable the list components component
 webserver_listcomponents:
 ```
 
@@ -61,20 +61,20 @@ webserver_listcomponents:
 
 ## API Documentation
 
-### GET /entities
+### GET /components
 
-Returns a JSON object containing an array of all entities configured on the device.
+Returns a JSON object containing an array of all components configured on the device.
 
 **Request:**
 ```http
-GET /entities HTTP/1.1
+GET /components HTTP/1.1
 Host: your-device-ip
 ```
 
 **Response:**
 ```json
 {
-  "entities": [
+  "components": [
     {
       "key": "sensor-temperature-123456",
       "object_id": "temperature", 
@@ -115,11 +115,11 @@ Host: your-device-ip
 import requests
 import json
 
-# Get entities from your ESPHome device
+# Get components from your ESPHome device
 response = requests.get('http://192.168.1.100/components')
 data = response.json()
 
-for entity in data['entities']:
+for entity in data['components']:
     print(f"Found {entity['type']}: {entity['name']} ({entity['object_id']})")
 ```
 
@@ -128,7 +128,7 @@ for entity in data['entities']:
 fetch('http://192.168.1.100/components')
   .then(response => response.json())
   .then(data => {
-    data.entities.forEach(entity => {
+    data.components.forEach(entity => {
       console.log(`${entity.type}: ${entity.name}`);
     });
   });
@@ -136,7 +136,7 @@ fetch('http://192.168.1.100/components')
 
 ### cURL
 ```bash
-curl http://192.168.1.100/components | jq '.entities[] | {name, type}'
+curl http://192.168.1.100/components | jq '.components[] | {name, type}'
 ```
 
 ## Complete Configuration Example
@@ -168,7 +168,7 @@ web_server:
     username: admin
     password: password
 
-# Add the list entities component
+# Add the list components component
 external_components:
   - source:
       type: git
@@ -177,7 +177,7 @@ external_components:
 
 webserver_listcomponents:
 
-# Example entities that will appear in /entities
+# Example components that will appear in /components
 sensor:
   - platform: dht
     pin: GPIO4
@@ -228,14 +228,14 @@ The component logs to the `WebServerListComponents` tag with different levels:
 - Ensure `web_server:` is configured in your YAML
 - Verify the web server component is loading successfully
 
-**404 on /entities endpoint**
+**404 on /components endpoint**
 - Check that `webserver-listcomponents:` is included in your configuration
 - Verify the external component was loaded successfully
 - Check device logs for setup errors
 
-**Empty entities array**
-- This is normal if no entities are configured on the device
-- Add some sensors, switches, or other entities to see results
+**Empty components array**
+- This is normal if no components are configured on the device
+- Add some sensors, switches, or other components to see results
 
 ### Debug Logging
 
